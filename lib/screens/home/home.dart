@@ -1,12 +1,12 @@
-import 'package:brew_crew/models/vital_data_model.dart';
+import 'package:brew_crew/screens/home/components/link_device.dart';
+import 'package:brew_crew/screens/home/components/device_dashboard.dart';
+import 'package:brew_crew/services/auth.dart';
 import 'package:brew_crew/services/database.dart';
 import 'package:brew_crew/shared/loading.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
   final String uid;
-
   const Home({super.key, required this.uid});
 
   @override
@@ -15,114 +15,61 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   late final DatabaseService _db;
+  final AuthService _auth = AuthService();
 
-  String _status = 'Loading user profile...';
-  String? _deviceId;
+  // null  → still seeding / loading
+  // ''    → show device entry screen
+  // 'ID'  → device connected, show dashboard
+  String? _connectedDeviceId;
+  bool _isSeeding = true;
 
   @override
   void initState() {
     super.initState();
     _db = DatabaseService(uid: widget.uid);
-    _loadUserProfile();
+    _initApp();
   }
 
-  Future<void> _loadUserProfile() async {
-    try {
-      // Loading();
-      setState(() => _status = 'Reading profile...');
-      final profile = await _db.getUserProfile();
-
-      if (profile == null) {
-        setState(() {
-          _status =
-              'No user profile found under users/${widget.uid}.\n'
-              'Create it first with a deviceId field (for example: esp32_001).';
-        });
-        return;
-      }
-
-      final deviceId = (profile['deviceId'] ?? '').toString().trim();
-      if (deviceId.isEmpty) {
-        setState(() {
-          _status =
-              'Profile found, but deviceId is missing.\n'
-              'Add deviceId in users/${widget.uid}/deviceId.';
-        });
-        return;
-      }
-
+  Future<void> _initApp() async {
+    // Always start at the device entry screen on every login
+    if (mounted) {
       setState(() {
-        _deviceId = deviceId;
-        _status =
-            'Connected to realtime stream.\n\n'
-            'Name     : ${profile['name']}\n'
-            'Role     : ${profile['role']}\n'
-            'DeviceId : $deviceId';
+        _isSeeding = false;
+        _connectedDeviceId = ''; // empty string → show LinkDevice
       });
-    } catch (e) {
-      setState(() => _status = 'Error while loading profile:\n$e');
     }
+  }
+
+  void _onDeviceLinked(String deviceId) {
+    setState(() => _connectedDeviceId = deviceId);
+  }
+
+  void _onDisconnect() {
+    setState(() => _connectedDeviceId = '');
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_deviceId == null) {
-      return Scaffold(
-        appBar: AppBar(title: const Text('Home')),
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Text(_status, textAlign: TextAlign.center),
-          ),
-        ),
+    // ── Loading / seeding splash ─────────────────────────────
+    if (_isSeeding) {
+      return const Scaffold(body: Center(child: Loading()));
+    }
+
+    // ── Device entry gate (always shown on login) ────────────
+    if (_connectedDeviceId == null || _connectedDeviceId!.isEmpty) {
+      return LinkDevice(
+        onDeviceLinked: _onDeviceLinked,
+        onLogout: () async => await _auth.signOut(),
+        db: _db,
       );
     }
 
-    return StreamBuilder<DatabaseEvent>(
-      stream: _db.latestVitalsStream(_deviceId!),
-      builder: (BuildContext context, AsyncSnapshot<DatabaseEvent> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
-          );
-        }
-
-        if (snapshot.hasError) {
-          return Scaffold(
-            appBar: AppBar(title: const Text('Home')),
-            body: Center(child: Text('Error: ${snapshot.error}')),
-          );
-        }
-
-        if (!snapshot.hasData || !snapshot.data!.snapshot.exists) {
-          return Scaffold(
-            appBar: AppBar(title: const Text('Home')),
-            body: const Center(child: Text('No realtime vitals available yet')),
-          );
-        }
-
-        final raw = Map<String, dynamic>.from(
-          snapshot.data!.snapshot.value as Map,
-        );
-
-        final vital = VitalDataModel.fromMap("latest", raw);
-        return Scaffold(
-          appBar: AppBar(title: const Text('Home')),
-          body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(_status, textAlign: TextAlign.center),
-                const SizedBox(height: 16),
-                const Text('Latest Vitals:'),
-                Text('Heart Rate: ${vital.heartRate} bpm'),
-                Text('SpO2: ${vital.spO2}%'),
-                Text('Temperature: ${vital.bodyTemp} °C'),
-              ],
-            ),
-          ),
-        );
-      },
+    // ── Device dashboard ─────────────────────────────────────
+    return DeviceDashboard(
+      deviceId: _connectedDeviceId!,
+      db: _db,
+      onDisconnect: _onDisconnect,
+      onLogout: () async => await _auth.signOut(),
     );
   }
 }

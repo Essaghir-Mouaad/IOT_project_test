@@ -9,14 +9,23 @@ class Wrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return home or authenticate widget
-
+    // Get the authenticated user from Provider
     final user = Provider.of<User?>(context);
 
+    // user can be:
+    //   null (not provided yet → show loading)
+    //   null value (no user → show authenticate)
+    //   User object (authenticated → show home)
+
     if (user == null) {
+      // First check: if this is the initial state (haven't decided yet)
+      // We can't distinguish between "loading" and "not authenticated" just by null
+      // So we rely on the stream to provide initial data
+      // Return Authenticate directly since Provider already waited for initial value
       return const Authenticate();
     }
 
+    // User is authenticated, show home with device selection
     return Home(uid: user.uid);
   }
 }

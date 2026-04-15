@@ -8,6 +8,10 @@ import 'package:provider/provider.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  // 🔥 Seed devices ONCE on app startup (remove after first run)
+  // await DatabaseService(uid: 'admin').seedDevices();
+
   runApp(const MyApp());
 }
 

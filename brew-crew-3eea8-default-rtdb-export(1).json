@@ -1,0 +1,319 @@
+{
+  "alerts": {
+    "esp32_001": {
+      "-Oq2qdB0-XiWu4ukGc-0": {
+        "level": "high",
+        "message": "Chute détectée ! Vérifiez immédiatement.",
+        "status": "unread",
+        "timestamp": 1776033028200,
+        "type": "fall"
+      },
+      "-Oq2qdKxqdixsJthqqzH": {
+        "level": "medium",
+        "message": "Absence de mouvement depuis 30 minutes.",
+        "status": "unread",
+        "timestamp": 1776031828200,
+        "type": "no_motion"
+      },
+      "-Oq2qdNnOwva2ChGlygY": {
+        "level": "high",
+        "message": "Fréquence cardiaque anormale : 110 BPM.",
+        "status": "read",
+        "timestamp": 1776030028200,
+        "type": "critical_vital"
+      },
+      "-Oq2qd_vvGMPByrTGuEO": {
+        "level": "low",
+        "message": "Localisation inhabituelle détectée.",
+        "status": "read",
+        "timestamp": 1776026428200,
+        "type": "unusual_location"
+      },
+      "-Oq2qmHkS29P-Wr7DSJy": {
+        "level": "high",
+        "message": "Chute détectée ! Vérifiez immédiatement.",
+        "status": "unread",
+        "timestamp": 1776033066569,
+        "type": "fall"
+      },
+      "-Oq2qmKY3rl2MBXuNb0-": {
+        "level": "medium",
+        "message": "Absence de mouvement depuis 30 minutes.",
+        "status": "unread",
+        "timestamp": 1776031866569,
+        "type": "no_motion"
+      },
+      "-Oq2qmWrRc80lX0PyxXO": {
+        "level": "high",
+        "message": "Fréquence cardiaque anormale : 110 BPM.",
+        "status": "read",
+        "timestamp": 1776030066569,
+        "type": "critical_vital"
+      },
+      "-Oq2qmZgNBkS0i9sOqOf": {
+        "level": "low",
+        "message": "Localisation inhabituelle détectée.",
+        "status": "read",
+        "timestamp": 1776026466569,
+        "type": "unusual_location"
+      }
+    }
+  },
+  "devices": {
+    "device_IdqboyUn": {
+      "deviceId": "device_IdqboyUn",
+      "lastUpdate": 1776172766936,
+      "name": "Starter Device",
+      "ownerId": "IdqboyUnzINdM7kZwQN3Zlh2xNa2",
+      "status": "offline"
+    },
+    "device_MiKBLogb": {
+      "deviceId": "device_MiKBLogb",
+      "lastUpdate": 1776172655777,
+      "name": "Starter Device",
+      "ownerId": "MiKBLogb9eZHcaVFKIw3KJk058n2",
+      "status": "offline"
+    },
+    "esp32_001": {
+      "deviceId": "esp32_001",
+      "lastUpdate": 1776033666569,
+      "name": "ESP32 - Chambre",
+      "ownerId": "HfmOuu61f1QAommS94VRoQRrDFy1",
+      "status": "online"
+    }
+  },
+  "environment": {
+    "device_IdqboyUn": {
+      "latest": {
+        "humidity": 0,
+        "temperature": 0,
+        "timestamp": 1776172766936
+      }
+    },
+    "device_MiKBLogb": {
+      "latest": {
+        "humidity": 0,
+        "temperature": 0,
+        "timestamp": 1776172655777
+      }
+    },
+    "esp32_001": {
+      "history": {
+        "-Oq2qczc1A7XaGD11d4f": {
+          "humidity": 52,
+          "temperature": 21,
+          "timestamp": 1776033268200
+        },
+        "-Oq2qd1mQvcDneRIZCCC": {
+          "humidity": 54,
+          "temperature": 22,
+          "timestamp": 1776033448200
+        },
+        "-Oq2qd4yHcmG0GwO6Opt": {
+          "humidity": 55,
+          "temperature": 22.5,
+          "timestamp": 1776033628200
+        },
+        "-Oq2qm5D2IOQNK-sNrN3": {
+          "humidity": 52,
+          "temperature": 21,
+          "timestamp": 1776033306569
+        },
+        "-Oq2qm8D7ae_BnFf67gx": {
+          "humidity": 54,
+          "temperature": 22,
+          "timestamp": 1776033486569
+        },
+        "-Oq2qmAzzrvT0uzpluu5": {
+          "humidity": 55,
+          "temperature": 22.5,
+          "timestamp": 1776033666569
+        }
+      },
+      "latest": {
+        "humidity": 55,
+        "temperature": 22.5,
+        "timestamp": 1776033666569
+      }
+    }
+  },
+  "location": {
+    "device_IdqboyUn": {
+      "current": {
+        "latitude": 0,
+        "longitude": 0,
+        "timestamp": 1776172766936
+      }
+    },
+    "device_MiKBLogb": {
+      "current": {
+        "latitude": 0,
+        "longitude": 0,
+        "timestamp": 1776172655777
+      }
+    },
+    "esp32_001": {
+      "current": {
+        "latitude": 31.6295,
+        "longitude": -7.9811,
+        "timestamp": 1776033666569
+      }
+    }
+  },
+  "sensors": {
+    "DHT22_Sensor": {
+      "device": "DHT22_Sensor",
+      "fall": -100,
+      "humidity": 47,
+      "motion": -100,
+      "temperature": 2.3,
+      "timestamp": "2026-04-14 14:17:00",
+      "unix_time": 1776176220
+    },
+    "MPU6050_Sensor": {
+      "acceleration": 9.80665,
+      "device": "MPU6050_Sensor",
+      "fall": 0,
+      "gyro": 0,
+      "humidity": -100,
+      "motion": -100,
+      "temperature": 47.40059,
+      "timestamp": "2026-04-14 14:17:02",
+      "unix_time": 1776176222
+    },
+    "PIR_Sensor": {
+      "device": "PIR_Sensor",
+      "fall": -100,
+      "humidity": -100,
+      "motion": 1,
+      "temperature": -100,
+      "timestamp": "2026-04-14 14:16:58",
+      "unix_time": 1776176218
+    }
+  },
+  "users": {
+    "HfmOuu61f1QAommS94VRoQRrDFy1": {
+      "deviceId": "esp32_001",
+      "email": "mouaad@email.com",
+      "name": "Mouaad",
+      "role": "caregiver",
+      "uid": "HfmOuu61f1QAommS94VRoQRrDFy1"
+    },
+    "IdqboyUnzINdM7kZwQN3Zlh2xNa2": {
+      "createdAt": 1776172766936,
+      "deviceId": "device_IdqboyUn",
+      "email": "youness@gmail.com",
+      "name": "youness",
+      "role": "caregiver",
+      "uid": "IdqboyUnzINdM7kZwQN3Zlh2xNa2"
+    },
+    "MiKBLogb9eZHcaVFKIw3KJk058n2": {
+      "createdAt": 1776172655777,
+      "deviceId": "device_MiKBLogb",
+      "email": "benojabal03@gmail.com",
+      "name": "benojabal03",
+      "role": "caregiver",
+      "uid": "MiKBLogb9eZHcaVFKIw3KJk058n2"
+    }
+  },
+  "vitals": {
+    "device_IdqboyUn": {
+      "latest": {
+        "bodyTemp": 0,
+        "heartRate": 0,
+        "spO2": 0,
+        "timestamp": 1776172766936
+      }
+    },
+    "device_MiKBLogb": {
+      "latest": {
+        "bodyTemp": 0,
+        "heartRate": 0,
+        "spO2": 0,
+        "timestamp": 1776172655777
+      }
+    },
+    "esp32_001": {
+      "history": {
+        "-Oq2qcWKMJKanvLlIYLn": {
+          "bodyTemp": 36.5,
+          "heartRate": 68,
+          "spO2": 97,
+          "timestamp": 1776033028200
+        },
+        "-Oq2qc_wGj1vPzMLzJL4": {
+          "bodyTemp": 36.6,
+          "heartRate": 70,
+          "spO2": 97.5,
+          "timestamp": 1776033148200
+        },
+        "-Oq2qch-Douvf3TP675D": {
+          "bodyTemp": 36.7,
+          "heartRate": 73,
+          "spO2": 98,
+          "timestamp": 1776033268200
+        },
+        "-Oq2qcl7DIfi5UipjdBO": {
+          "bodyTemp": 36.9,
+          "heartRate": 75,
+          "spO2": 98.5,
+          "timestamp": 1776033388200
+        },
+        "-Oq2qco2PIZLmXWqQwl9": {
+          "bodyTemp": 36.7,
+          "heartRate": 71,
+          "spO2": 99,
+          "timestamp": 1776033508200
+        },
+        "-Oq2qcrihMUcgIBIhKw9": {
+          "bodyTemp": 36.8,
+          "heartRate": 72,
+          "spO2": 98,
+          "timestamp": 1776033628200
+        },
+        "-Oq2qlWwHSTAZ1bAwp1h": {
+          "bodyTemp": 36.5,
+          "heartRate": 68,
+          "spO2": 97,
+          "timestamp": 1776033066569
+        },
+        "-Oq2qldn1YOxuJ6nf-C4": {
+          "bodyTemp": 36.6,
+          "heartRate": 70,
+          "spO2": 97.5,
+          "timestamp": 1776033186569
+        },
+        "-Oq2qlhw2TfdTlDp9a4W": {
+          "bodyTemp": 36.7,
+          "heartRate": 73,
+          "spO2": 98,
+          "timestamp": 1776033306569
+        },
+        "-Oq2qll5ZSitPRq9g06s": {
+          "bodyTemp": 36.9,
+          "heartRate": 75,
+          "spO2": 98.5,
+          "timestamp": 1776033426569
+        },
+        "-Oq2qlpM9z193gFb3ynO": {
+          "bodyTemp": 36.7,
+          "heartRate": 71,
+          "spO2": 99,
+          "timestamp": 1776033546569
+        },
+        "-Oq2qlsV7tR6P4PFmqUn": {
+          "bodyTemp": 36.8,
+          "heartRate": 72,
+          "spO2": 98,
+          "timestamp": 1776033666569
+        }
+      },
+      "latest": {
+        "bodyTemp": 36,
+        "heartRate": 7,
+        "spO2": 910,
+        "timestamp": 1776033666569
+      }
+    }
+  }
+}
