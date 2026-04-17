@@ -17,7 +17,7 @@ class StatusItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
         color: statusColor.withValues(alpha: 0.08),
         border: Border.all(

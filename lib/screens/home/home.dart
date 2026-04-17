@@ -1,5 +1,5 @@
 import 'package:brew_crew/screens/home/components/link_device.dart';
-import 'package:brew_crew/screens/home/components/device_dashboard.dart';
+import 'package:brew_crew/screens/home/home_wrapper.dart';
 import 'package:brew_crew/services/auth.dart';
 import 'package:brew_crew/services/database.dart';
 import 'package:brew_crew/shared/loading.dart';
@@ -65,11 +65,6 @@ class _HomeState extends State<Home> {
     }
 
     // ── Device dashboard ─────────────────────────────────────
-    return DeviceDashboard(
-      deviceId: _connectedDeviceId!,
-      db: _db,
-      onDisconnect: _onDisconnect,
-      onLogout: () async => await _auth.signOut(),
-    );
+    return HomeWrapper(deviceId: _connectedDeviceId!, db: _db, onDisconnect: _onDisconnect, onLogout: () async => await _auth.signOut());
   }
 }

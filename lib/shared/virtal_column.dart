@@ -19,7 +19,7 @@ class VitalItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.blue[200]!, width: 1.4),
         borderRadius: BorderRadius.circular(4),
