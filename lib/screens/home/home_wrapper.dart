@@ -1,3 +1,5 @@
+import 'package:brew_crew/screens/home/components/schedual/schedual.dart';
+import 'package:brew_crew/screens/home/components/send_message/send_alert.dart';
 import 'package:brew_crew/screens/home/device_dashboard.dart';
 import 'package:brew_crew/screens/home/components/prediction_compo/predictions.dart';
 import 'package:brew_crew/services/database.dart';
@@ -128,6 +130,28 @@ class _HomeWrapperState extends State<HomeWrapper> {
                 });
               },
             ),
+            _buildDrawerItem(
+              icon: Icons.switch_access_shortcut_add_sharp,
+              title: "Schedual",
+              onTap: () {
+                Navigator.pop(context);
+                setState(() {
+                  _currentPageIndex = 2;
+                });
+              },
+            ),
+
+            _buildDrawerItem(
+              icon: Icons.emergency_share_outlined,
+              title: "Send Alert",
+              onTap: () {
+                Navigator.pop(context);
+                setState(() {
+                  _currentPageIndex = 3;
+                });
+              },
+            ),
+
             const Divider(),
             _buildDrawerItem(
               icon: Icons.link_off,
@@ -197,6 +221,10 @@ class _HomeWrapperState extends State<HomeWrapper> {
     // Use _currentPageIndex to show the right page without TabBarView
     return _currentPageIndex == 0
         ? DeviceDashboard(deviceId: widget.deviceId, db: widget.db)
-        : const Predictions();
+        : _currentPageIndex == 1
+        ? const Predictions()
+        : _currentPageIndex == 2
+        ? const Schedual()
+        : const SendAlert();
   }
 }

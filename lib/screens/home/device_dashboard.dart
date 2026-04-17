@@ -42,9 +42,18 @@ class _DeviceDashboardState extends State<DeviceDashboard>
           labelColor: Colors.pinkAccent,
           controller: _tabController,
           tabs: const [
-            Tab(icon: Icon(Icons.graphic_eq_outlined, size: 25)),
-            Tab(icon: Icon(Icons.history_outlined, size: 25)),
-            Tab(icon: Icon(Icons.settings_outlined, size: 25)),
+            Tab(
+              // text: "Latest Vit",
+              icon: Icon(Icons.graphic_eq_outlined, size: 25),
+            ),
+            Tab(
+              // text: "History",
+              icon: Icon(Icons.history_outlined, size: 25, color: Colors.green),
+            ),
+            Tab(
+              // text: "Settings",
+              icon: Icon(Icons.settings_outlined, size: 25),
+            ),
           ],
         ),
       ),

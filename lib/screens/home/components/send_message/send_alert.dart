@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class Predictions extends StatelessWidget {
-  const Predictions({super.key});
+class SendAlert extends StatelessWidget {
+  const SendAlert({super.key});
 
   @override
   Widget build(BuildContext context) {
     return const Center(
       child: Text(
-        'Predictions Screen \n (coming soon)',
+        'Send Alert Screen \n (coming soon)',
         textAlign: TextAlign.center,
         style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
       ),

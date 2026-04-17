@@ -48,7 +48,7 @@ class AnalyseVitals extends StatelessWidget {
     final overallColor = _getStatusColor(overallStatus);
 
     return Container(
-      margin: const EdgeInsets.all(10),
+      margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(6),
@@ -66,7 +66,7 @@ class AnalyseVitals extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: overallColor.withValues(alpha: 0.2),
+              color: overallColor.withValues(alpha: 0.09),
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(6),
                 topRight: Radius.circular(6),
