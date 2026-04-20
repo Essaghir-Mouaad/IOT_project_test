@@ -81,7 +81,7 @@ class _SensorsHistoryState extends State<SensorsHistory> {
         }
       }
     } catch (e) {
-      print('Error generating random data: $e');
+      debugPrint('Error generating random data: $e');
     }
   }
 
@@ -414,7 +414,7 @@ class _SensorHistoryCard extends StatelessWidget {
                         ),
                         belowBarData: fl_chart.BarAreaData(
                           show: true,
-                          color: Colors.blue.withOpacity(0.1),
+                          color: Colors.blue.withValues(alpha: 0.1),
                         ),
                         color: Colors.blue[600],
                         barWidth: 2,
