@@ -53,16 +53,19 @@ class _PredictionsState extends State<Predictions> {
             icon: Icon(Icons.heart_broken, color: Colors.red, size: 40.0),
             value: 23.4,
             color: Colors.red,
+            unite: "bp",
           ),
           PredictionContainer(
             icon: Icon(Icons.thermostat, color: Colors.orange, size: 40.0),
             value: 23.4,
             color: Colors.orange,
+            unite: "°C",
           ),
           PredictionContainer(
             icon: Icon(Icons.brightness_5, color: Colors.blue, size: 40.0),
             value: 23.4,
             color: Colors.blue,
+            unite: "%",
           ),
 
           const SizedBox(height: 20.0),
