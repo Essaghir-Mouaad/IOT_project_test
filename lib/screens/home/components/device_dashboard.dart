@@ -1,6 +1,6 @@
 import 'package:brew_crew/models/vital_data_model.dart';
-import 'package:brew_crew/screens/home/components/analyse_vitals.dart';
-import 'package:brew_crew/screens/home/components/latest_vitals.dart';
+import 'package:brew_crew/screens/home/components/latest_vitals_compo/analyse_vitals.dart';
+import 'package:brew_crew/screens/home/components/latest_vitals_compo/latest_vitals.dart';
 import 'package:brew_crew/services/database.dart';
 import 'package:brew_crew/shared/loading.dart';
 import 'package:firebase_database/firebase_database.dart';

@@ -32,7 +32,7 @@ class _CriticalCardState extends State<CriticalCard>
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: _ctrl,
-      builder: (_, __) => Transform.scale(
+      builder: (a, b) => Transform.scale(
         scale: 1.0 + _ctrl.value * 0.03,
         child: StatusCard(
           color: StatusColors.criticalPrimary,

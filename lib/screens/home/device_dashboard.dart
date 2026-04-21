@@ -98,7 +98,9 @@ class _DeviceDashboardState extends State<DeviceDashboard>
   }
 
   Widget _buildHistoryTab() {
-    return SensorsHistory(deviceId: widget.deviceId, db: widget.db);
+    return KeepAliveWidget(
+      child: SensorsHistory(deviceId: widget.deviceId, db: widget.db),
+    );
   }
 }
 
