@@ -1,4 +1,5 @@
 import 'package:brew_crew/models/vital_data_model.dart';
+import 'package:brew_crew/screens/home/components/sensors_history.dart';
 import 'package:brew_crew/screens/home/components/latest_vitals_compo/latest_vitals_analysis.dart';
 import 'package:brew_crew/services/database.dart';
 import 'package:brew_crew/shared/loading.dart';
@@ -97,7 +98,7 @@ class _DeviceDashboardState extends State<DeviceDashboard>
   }
 
   Widget _buildHistoryTab() {
-    return const Center(child: Text('History coming soon'));
+    return SensorsHistory(deviceId: widget.deviceId, db: widget.db);
   }
 }
 
