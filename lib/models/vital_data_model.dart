@@ -50,26 +50,31 @@ class VitalDataModel {
   String get bodyTempStatus {
     if (bodyTemp >= 36.1 && bodyTemp <= 37.2) return 'normal';
     if ((bodyTemp > 37.2 && bodyTemp <= 38) ||
-        (bodyTemp < 36.1 && bodyTemp >= 35))
+        (bodyTemp < 36.1 && bodyTemp >= 35)) {
       return 'warning';
+    }
     return 'emergency'; // >38 or <35
   }
 
   String get respiratoryRateStatus {
     if (respiratoryRate >= 12 && respiratoryRate <= 20) return 'normal';
     if ((respiratoryRate > 20 && respiratoryRate <= 24) ||
-        (respiratoryRate < 12 && respiratoryRate >= 10))
+        (respiratoryRate < 12 && respiratoryRate >= 10)) {
       return 'warning';
+    }
     return 'emergency'; // >24 or <10
   }
 
   String get bloodPressureStatus {
     if (systolicBP < 120 && diastolicBP < 80) return 'normal';
-    if ((systolicBP >= 120 && systolicBP < 130) && diastolicBP < 80)
+    if ((systolicBP >= 120 && systolicBP < 130) && diastolicBP < 80) {
       return 'elevated';
+    }
+
     if ((systolicBP >= 130 && systolicBP < 140) ||
-        (diastolicBP >= 80 && diastolicBP < 90))
+        (diastolicBP >= 80 && diastolicBP < 90)) {
       return 'hypertension stage 1';
+    }
     if (systolicBP >= 140 || diastolicBP >= 90) return 'hypertension stage 2';
     return 'emergency'; // Hypertensive crisis
   }

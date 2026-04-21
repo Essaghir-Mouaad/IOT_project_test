@@ -1,5 +1,6 @@
 import 'package:brew_crew/screens/home/components/schedual/schedual.dart';
 import 'package:brew_crew/screens/home/components/send_message/send_alert.dart';
+import 'package:brew_crew/screens/home/components/settings/settings.dart';
 import 'package:brew_crew/screens/home/device_dashboard.dart';
 import 'package:brew_crew/screens/home/components/prediction_compo/predictions.dart';
 import 'package:brew_crew/services/database.dart';
@@ -154,6 +155,16 @@ class _HomeWrapperState extends State<HomeWrapper> {
 
             const Divider(),
             _buildDrawerItem(
+              icon: Icons.settings,
+              title: "Settings",
+              onTap: () {
+                Navigator.pop(context);
+                setState(() {
+                  _currentPageIndex = 4;
+                });
+              },
+            ),
+            _buildDrawerItem(
               icon: Icons.link_off,
               title: 'Disconnect Device',
               onTap: () {
@@ -222,9 +233,11 @@ class _HomeWrapperState extends State<HomeWrapper> {
     return _currentPageIndex == 0
         ? DeviceDashboard(deviceId: widget.deviceId, db: widget.db)
         : _currentPageIndex == 1
-        ? const Predictions()
+        ? Predictions(deviceId: widget.deviceId, alert: "normal")
         : _currentPageIndex == 2
         ? const Schedual()
-        : const SendAlert();
+        : _currentPageIndex == 3
+        ? const SendAlert()
+        : const Settings();
   }
 }

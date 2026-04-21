@@ -23,7 +23,7 @@ class _DeviceDashboardState extends State<DeviceDashboard>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
   }
 
   @override
@@ -50,10 +50,6 @@ class _DeviceDashboardState extends State<DeviceDashboard>
               // text: "History",
               icon: Icon(Icons.history_outlined, size: 25, color: Colors.green),
             ),
-            Tab(
-              // text: "Settings",
-              icon: Icon(Icons.settings_outlined, size: 25),
-            ),
           ],
         ),
       ),
@@ -66,11 +62,7 @@ class _DeviceDashboardState extends State<DeviceDashboard>
       color: Colors.white60,
       child: TabBarView(
         controller: _tabController,
-        children: [
-          _buildLatestVitalsTab(),
-          _buildHistoryTab(),
-          _buildSettingsTab(),
-        ],
+        children: [_buildLatestVitalsTab(), _buildHistoryTab()],
       ),
     );
   }
@@ -106,10 +98,6 @@ class _DeviceDashboardState extends State<DeviceDashboard>
 
   Widget _buildHistoryTab() {
     return const Center(child: Text('History coming soon'));
-  }
-
-  Widget _buildSettingsTab() {
-    return const Center(child: Text('Settings coming soon'));
   }
 }
 
