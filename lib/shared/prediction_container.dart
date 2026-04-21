@@ -5,22 +5,24 @@ class PredictionContainer extends StatelessWidget {
   final double value;
   final Icon icon;
   final Color color;
+  final String unite;
   const PredictionContainer({
     super.key,
     required this.icon,
     required this.value,
     required this.color,
+    required this.unite,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: color.withValues(alpha: .3),
+        color: color.withValues(alpha: .2),
         borderRadius: BorderRadius.circular(4.0),
       ),
       margin: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 8.0),
-      padding: const EdgeInsets.all(4.0),
+      padding: const EdgeInsets.all(8.0),
       width: double.infinity,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -28,12 +30,12 @@ class PredictionContainer extends StatelessWidget {
         children: [
           icon,
           const SizedBox(width: 8.0),
-          const WaveLine(),
+          WaveLine(color: color),
           const SizedBox(width: 8.0),
           Text(
-            value.toString(),
+            "${value.toString()} $unite",
             style: TextStyle(
-              color: Colors.white,
+              color: color,
               fontSize: 20.0,
               fontWeight: FontWeight.bold,
             ),

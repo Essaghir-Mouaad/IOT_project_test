@@ -2,19 +2,26 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class WaveLine extends StatelessWidget {
-  const WaveLine({super.key});
+  final Color color;
+  const WaveLine({super.key, required this.color});
 
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(size: const Size(150, 50), painter: WavePainter());
+    return CustomPaint(
+      size: const Size(150, 50),
+      painter: WavePainter(color: color),
+    );
   }
 }
 
 class WavePainter extends CustomPainter {
+  final Color color;
+  const WavePainter({required this.color});
+
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.pinkAccent
+      ..color = color
       ..strokeWidth = 2.5
       ..style = PaintingStyle.stroke;
 
