@@ -83,4 +83,6 @@ class AuthService {
       return null;
     }
   }
+
+  // Future<Object?> createUserWithEmailAndPassword(String email, String password) async {}
 }
