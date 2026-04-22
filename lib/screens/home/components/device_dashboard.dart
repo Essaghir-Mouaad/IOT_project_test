@@ -1,6 +1,7 @@
 import 'package:brew_crew/models/vital_data_model.dart';
-import 'package:brew_crew/screens/home/components/analyse_vitals.dart';
-import 'package:brew_crew/screens/home/components/latest_vitals.dart';
+import 'package:brew_crew/screens/home/components/latest_vitals_compo/analyse_vitals.dart';
+import 'package:brew_crew/screens/home/components/latest_vitals_compo/latest_vitals.dart';
+import 'package:brew_crew/screens/home/components/sensors_history.dart';
 import 'package:brew_crew/services/database.dart';
 import 'package:brew_crew/shared/loading.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -164,7 +165,7 @@ class _DeviceDashboardState extends State<DeviceDashboard>
               ),
             ),
 
-            const Center(child: Text('History coming soon')),
+            SensorsHistory(deviceId: widget.deviceId, db: widget.db),
 
             const Center(child: Text('Settings coming soon')),
           ],
