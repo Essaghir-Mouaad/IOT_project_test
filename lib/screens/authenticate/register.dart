@@ -1,5 +1,4 @@
 import 'package:brew_crew/services/auth.dart';
-import 'package:brew_crew/shared/constance.dart';
 import 'package:brew_crew/shared/loading.dart';
 import 'package:flutter/material.dart';
 
@@ -25,137 +24,121 @@ class _RegisterState extends State<Register> {
   Widget build(BuildContext context) {
     return loading
         ? Loading()
-        : Scaffold(
-            backgroundColor: Colors.blue[100],
-            appBar: AppBar(
-              backgroundColor: Colors.blue[400],
-              elevation: 0.0, // noo shadow
-              title: Text("Sign up"),
-              titleTextStyle: TextStyle(
-                color: Colors.white,
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-              ),
+        : Center(
+            child: Scaffold(
+              backgroundColor: const Color.fromARGB(255, 200, 240, 255),
+              body: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(
+                      75,
+                    ), // Half of width/height for full circle
+                    child: Image.asset(
+                      'assets/images/icon.png',
+                      width: 150,
+                      height: 150,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 40),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          TextFormField(
+                            onChanged: (val) => setState(() => email = val),
+                            validator: (val) => val == null || val.isEmpty
+                                ? "Enter an email"
+                                : null,
+                            decoration: InputDecoration(
+                              hintText: "Email",
+                              prefixIcon: const Icon(Icons.email_outlined),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(
+                                  30,
+                                ), // very round = fun
+                                borderSide: BorderSide(
+                                  color: Colors.purple,
+                                  width: .3,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          TextFormField(
+                            onChanged: (val) => setState(() => password = val),
+                            validator: (val) => val != null && val.length < 6
+                                ? "Password must be at least 6 characters"
+                                : null,
+                            obscureText: true,
+                            decoration: InputDecoration(
+                              hintText: "Password",
+                              prefixIcon: const Icon(Icons.lock_outlined),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30),
+                                borderSide: BorderSide(
+                                  color: Colors.purple,
+                                  width: .3,
+                                ),
+                              ),
+                            ),
+                          ),
 
-              actions: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: ElevatedButton.icon(
-                    icon: const Icon(Icons.login, size: 18),
-                    onPressed: () {
-                      widget.toggleView();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white24,
-                      shadowColor: Colors.transparent,
-                      elevation: 0,
-                      padding: EdgeInsets.all(10),
-                      minimumSize: Size.zero,
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(6),
+                          const SizedBox(height: 20),
+                          ElevatedButton(
+                            onPressed: () async {
+                              if (_formKey.currentState!.validate()) {
+                                setState(() => loading = true);
+                                final result = await _auth
+                                    .registerWithEmailAndPassword(
+                                      email,
+                                      password,
+                                    );
+                                if (result == null) {
+                                  setState(() {
+                                    error =
+                                        "Could not create user with those credentials";
+                                    loading = false;
+                                  });
+                                }
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue[300],
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 50,
+                                vertical: 15,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                            ),
+                            child: const Text(
+                              "Register",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            error,
+                            style: const TextStyle(color: Colors.red),
+                          ),
+                        ],
                       ),
                     ),
-                    label: const Text("Sign in "),
                   ),
-                ),
-              ],
-            ),
-
-            body: Padding(
-              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
-
-              child: Container(
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white, width: 2),
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      SizedBox(height: 20),
-                      TextFormField(
-                        decoration: inputTextDecoration.copyWith(
-                          hintText: "Email",
-                        ),
-                        validator: (value) => (value == null || value.isEmpty)
-                            ? "email is required"
-                            : null,
-                        onChanged: (val) {
-                          setState(() => email = val);
-                        },
-                      ),
-                      SizedBox(height: 20),
-                      TextFormField(
-                        decoration: inputTextDecoration.copyWith(
-                          hintText: "Password",
-                        ),
-                        validator: (value) =>
-                            (value == null || value.length < 6)
-                            ? "password 6+ chars long"
-                            : null,
-                        obscureText: true,
-                        onChanged: (val) {
-                          setState(() => password = val);
-                        },
-                      ),
-                      SizedBox(height: 20),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.pink[400],
-                          foregroundColor: Colors.white,
-                          elevation: 0,
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 14,
-                            horizontal: 24,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                        ),
-                        onPressed: () async {
-                          if (_formKey.currentState?.validate() ?? false) {
-                            setState(() {
-                              loading = true;
-                            });
-                            dynamic result = await _auth
-                                .registerWithEmailAndPassword(email, password);
-
-                            if (result == null) {
-                              setState(() {
-                                error =
-                                    "Please validate the email or password ";
-                                loading = false;
-                              });
-                            }
-                          }
-                        },
-                        child: Text(
-                          "Register",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      SizedBox(height: 16),
-                      Center(
-                        child: Text(
-                          error,
-                          style: TextStyle(
-                            color: Colors.red,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
+                  const SizedBox(height: 20),
+                  TextButton(
+                    onPressed: widget.toggleView,
+                    child: const Text(
+                      "Already have an account? Sign In",
+                      style: TextStyle(color: Colors.blue),
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
           );
