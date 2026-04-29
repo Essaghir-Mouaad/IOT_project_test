@@ -4,7 +4,9 @@ import 'status_card.dart';
 import 'theme_colors.dart';
 
 class CriticalCard extends StatefulWidget {
-  const CriticalCard({super.key});
+  final VoidCallback? onEscalate;
+  const CriticalCard({super.key, this.onEscalate});
+
   @override
   State<CriticalCard> createState() => _CriticalCardState();
 }
@@ -12,14 +14,18 @@ class CriticalCard extends StatefulWidget {
 class _CriticalCardState extends State<CriticalCard>
     with SingleTickerProviderStateMixin {
   late AnimationController _ctrl;
+  late Animation<double> _pulse;
 
   @override
   void initState() {
     super.initState();
     _ctrl = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 700),
+      duration: const Duration(milliseconds: 900),
     )..repeat(reverse: true);
+    _pulse = Tween(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut),
+    );
   }
 
   @override
@@ -31,130 +37,71 @@ class _CriticalCardState extends State<CriticalCard>
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: _ctrl,
-      builder: (a, b) => Transform.scale(
-        scale: 1.0 + _ctrl.value * 0.03,
-        child: StatusCard(
-          color: StatusColors.criticalPrimary,
-          bgColor: StatusColors.criticalBg,
-          badge: 'Critical',
-          title: 'Critical — immediate action',
-          subtitle: 'Severe anomaly detected. Escalate now.',
-          child: CustomPaint(
-            size: const Size(100, 100),
-            painter: _CriticalFacePainter(_ctrl.value),
-          ),
+      animation: _pulse,
+      builder: (_, __) => StatusCard(
+        color: StatusColors.criticalPrimary,
+        bgColor: StatusColors.criticalBg,
+        darkColor: StatusColors.criticalDark,
+        badge: 'Critical',
+        title: 'Immediate action required',
+        subtitle: 'Severe anomaly detected across multiple vitals. Escalate to clinical staff now.',
+        actionLabel: 'Escalate now',
+        onAction: widget.onEscalate,
+        icon: CustomPaint(
+          size: const Size(32, 32),
+          painter: _CriticalIconPainter(_pulse.value),
         ),
       ),
     );
   }
 }
 
-class _CriticalFacePainter extends CustomPainter {
+class _CriticalIconPainter extends CustomPainter {
   final double t;
-  _CriticalFacePainter(this.t);
+  _CriticalIconPainter(this.t);
 
   @override
   void paint(Canvas canvas, Size size) {
-    final cx = size.width / 2, cy = size.height / 2 - 4;
+    final cx = size.width / 2, cy = size.height / 2;
     final red = StatusColors.criticalPrimary;
     final dark = StatusColors.criticalDark;
 
+    // Face circle
+    canvas.drawCircle(Offset(cx, cy), 13,
+        Paint()..color = StatusColors.criticalBg);
     canvas.drawCircle(
       Offset(cx, cy),
-      PainterDimensions.criticalFaceRadius,
-      Paint()..color = StatusColors.criticalBg,
-    );
-    canvas.drawCircle(
-      Offset(cx, cy),
-      PainterDimensions.criticalFaceRadius,
+      13,
       Paint()
-        ..color = red
+        ..color = Color.lerp(red, dark, t * 0.3)!
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 2,
-    );
-
-    canvas.drawCircle(
-      Offset(cx - 12, cy - 6),
-      PainterDimensions.criticalEyeRadius,
-      Paint()..color = dark,
-    );
-    canvas.drawCircle(
-      Offset(cx + 12, cy - 6),
-      PainterDimensions.criticalEyeRadius,
-      Paint()..color = dark,
+        ..strokeWidth = 1.5,
     );
 
     // X eyes
     final xp = Paint()
       ..color = red
-      ..strokeWidth = 2
+      ..strokeWidth = 1.8
       ..strokeCap = StrokeCap.round;
-    canvas.drawLine(Offset(cx - 17, cy - 11), Offset(cx - 7, cy - 1), xp);
-    canvas.drawLine(Offset(cx - 7, cy - 11), Offset(cx - 17, cy - 1), xp);
-    canvas.drawLine(Offset(cx + 7, cy - 11), Offset(cx + 17, cy - 1), xp);
-    canvas.drawLine(Offset(cx + 17, cy - 11), Offset(cx + 7, cy - 1), xp);
+    canvas.drawLine(Offset(cx - 7, cy - 5), Offset(cx - 3, cy - 1), xp);
+    canvas.drawLine(Offset(cx - 3, cy - 5), Offset(cx - 7, cy - 1), xp);
+    canvas.drawLine(Offset(cx + 3, cy - 5), Offset(cx + 7, cy - 1), xp);
+    canvas.drawLine(Offset(cx + 7, cy - 5), Offset(cx + 3, cy - 1), xp);
 
+    // Frown
     final frown = Path()
-      ..moveTo(cx - 15, cy + 18)
-      ..quadraticBezierTo(cx, cy + 10, cx + 15, cy + 18);
+      ..moveTo(cx - 6, cy + 6)
+      ..quadraticBezierTo(cx, cy + 3, cx + 6, cy + 6);
     canvas.drawPath(
       frown,
       Paint()
         ..color = dark
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 3
+        ..strokeWidth = 2
         ..strokeCap = StrokeCap.round,
-    );
-
-    // ambulance body
-    final ambY = size.height - 18.0;
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(
-        Rect.fromLTWH(
-          2,
-          ambY - 10,
-          PainterDimensions.criticalAmbulanceWidth,
-          PainterDimensions.criticalAmbulanceHeight,
-        ),
-        const Radius.circular(5),
-      ),
-      Paint()..color = red,
-    );
-    // siren blink
-    final sirenColor = Color.lerp(red, StatusColors.criticalSiren, t)!;
-    canvas.drawRect(
-      Rect.fromLTWH(
-        6,
-        ambY - 18,
-        PainterDimensions.criticalSirenWidth,
-        PainterDimensions.criticalSirenHeight,
-      ),
-      Paint()..color = sirenColor,
-    );
-
-    canvas.drawCircle(
-      Offset(16, ambY + 8),
-      PainterDimensions.criticalWheelRadius,
-      Paint()..color = StatusColors.wheelDark,
-    );
-    canvas.drawCircle(
-      Offset(16, ambY + 8),
-      PainterDimensions.criticalWheelCenterRadius,
-      Paint()..color = StatusColors.wheelGrey,
-    );
-    canvas.drawCircle(
-      Offset(84, ambY + 8),
-      PainterDimensions.criticalWheelRadius,
-      Paint()..color = StatusColors.wheelDark,
-    );
-    canvas.drawCircle(
-      Offset(84, ambY + 8),
-      PainterDimensions.criticalWheelCenterRadius,
-      Paint()..color = StatusColors.wheelGrey,
     );
   }
 
   @override
-  bool shouldRepaint(_CriticalFacePainter old) => old.t != t;
+  bool shouldRepaint(_CriticalIconPainter old) => old.t != t;
 }

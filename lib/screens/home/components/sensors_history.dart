@@ -165,9 +165,8 @@ class _SensorsHistoryState extends State<SensorsHistory>
                   // For N tabs the horizontal padding per side to make the
                   // indicator half the tab width is: totalWidth * (1 / (4*N)).
                   indicatorPadding: EdgeInsets.symmetric(
-                    horizontal:
-                        MediaQuery.of(context).size.width *
-                        (1 / (100 * _tabController.length)),
+                    horizontal: MediaQuery.of(context).size.width *
+                        (1 / (4 * _tabController.length)),
                   ),
                   indicatorSize: TabBarIndicatorSize.tab,
                   labelColor: Colors.white,
@@ -1252,7 +1251,7 @@ class _SectionHeader extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Text(
         title,
-        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
       ),
     );
   }

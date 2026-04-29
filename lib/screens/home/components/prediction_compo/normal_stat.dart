@@ -1,10 +1,12 @@
+// ── Normal card ──────────────────────────────────────────
 import 'package:flutter/material.dart';
 import 'status_card.dart';
 import 'theme_colors.dart';
 
-// ── Normal card ──────────────────────────────────────────
 class NormalCard extends StatefulWidget {
-  const NormalCard({super.key});
+  final VoidCallback? onViewHistory;
+  const NormalCard({super.key, this.onViewHistory});
+
   @override
   State<NormalCard> createState() => _NormalCardState();
 }
@@ -21,10 +23,9 @@ class _NormalCardState extends State<NormalCard>
       vsync: this,
       duration: const Duration(seconds: 2),
     )..repeat(reverse: true);
-    _bob = Tween(
-      begin: 0.0,
-      end: -8.0,
-    ).animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut));
+    _bob = Tween(begin: 0.0, end: -4.0).animate(
+      CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut),
+    );
   }
 
   @override
@@ -35,19 +36,22 @@ class _NormalCardState extends State<NormalCard>
 
   @override
   Widget build(BuildContext context) {
-    return StatusCard(
-      color: StatusColors.normalPrimary,
-      bgColor: StatusColors.normalBg,
-      badge: 'All clear',
-      title: 'Everything looks good',
-      subtitle: 'No anomalies detected. Operating within normal parameters.',
-      child: AnimatedBuilder(
-        animation: _bob,
-        builder: (_, __) => Transform.translate(
+    return AnimatedBuilder(
+      animation: _bob,
+      builder: (_, __) => StatusCard(
+        color: StatusColors.normalPrimary,
+        bgColor: StatusColors.normalBg,
+        darkColor: StatusColors.normalDark,
+        badge: 'All clear',
+        title: 'Everything looks good',
+        subtitle: 'No anomalies detected. All vitals within normal parameters.',
+        actionLabel: 'View history',
+        onAction: widget.onViewHistory,
+        icon: Transform.translate(
           offset: Offset(0, _bob.value),
           child: CustomPaint(
-            size: const Size(100, 100),
-            painter: _NormalFacePainter(),
+            size: const Size(32, 32),
+            painter: _NormalIconPainter(),
           ),
         ),
       ),
@@ -55,56 +59,37 @@ class _NormalCardState extends State<NormalCard>
   }
 }
 
-class _NormalFacePainter extends CustomPainter {
+class _NormalIconPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final cx = size.width / 2, cy = size.height / 2;
-    final paint = Paint()
-      ..color = StatusColors.normalPrimary
-      ..style = PaintingStyle.fill;
 
-    // face
+    canvas.drawCircle(Offset(cx, cy), 13, Paint()..color = StatusColors.normalBg);
     canvas.drawCircle(
       Offset(cx, cy),
-      PainterDimensions.normalFaceRadius,
-      Paint()..color = StatusColors.normalBg,
-    );
-    canvas.drawCircle(
-      Offset(cx, cy),
-      PainterDimensions.normalFaceRadius,
+      13,
       Paint()
         ..color = StatusColors.normalAccent
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 2,
+        ..strokeWidth = 1.5,
     );
 
-    // eyes
+    // Eyes
     canvas.drawCircle(
-      Offset(cx - 13, cy - 10),
-      PainterDimensions.normalEyeRadius,
-      paint..color = StatusColors.normalDark,
-    );
+      Offset(cx - 4, cy - 3), 2, Paint()..color = StatusColors.normalDark);
     canvas.drawCircle(
-      Offset(cx + 13, cy - 10),
-      PainterDimensions.normalEyeRadius,
-      paint,
-    );
+      Offset(cx + 4, cy - 3), 2, Paint()..color = StatusColors.normalDark);
 
-    // smile
+    // Smile
     final smile = Path()
-      ..moveTo(cx - 17, cy + PainterDimensions.normalSmileOffset)
-      ..quadraticBezierTo(
-        cx,
-        cy + 26,
-        cx + 17,
-        cy + PainterDimensions.normalSmileOffset,
-      );
+      ..moveTo(cx - 6, cy + 3)
+      ..quadraticBezierTo(cx, cy + 8, cx + 6, cy + 3);
     canvas.drawPath(
       smile,
       Paint()
         ..color = StatusColors.normalDark
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 3
+        ..strokeWidth = 2
         ..strokeCap = StrokeCap.round,
     );
   }

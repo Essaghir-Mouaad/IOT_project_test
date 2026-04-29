@@ -233,7 +233,7 @@ class _HomeWrapperState extends State<HomeWrapper> {
     return _currentPageIndex == 0
         ? DeviceDashboard(deviceId: widget.deviceId, db: widget.db)
         : _currentPageIndex == 1
-        ? Predictions(deviceId: widget.deviceId, alert: "normal")
+        ? Predictions(deviceId: widget.deviceId, db: widget.db)
         : _currentPageIndex == 2
         ? const Schedual()
         : _currentPageIndex == 3
