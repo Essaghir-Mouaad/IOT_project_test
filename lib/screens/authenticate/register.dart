@@ -14,6 +14,7 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   String email = "";
   String password = "";
+  int age = 0;
   String error = "";
   bool loading = false;
 
@@ -88,6 +89,35 @@ class _RegisterState extends State<Register> {
                           ),
 
                           const SizedBox(height: 20),
+                          TextFormField(
+                            keyboardType: TextInputType.number,
+                            onChanged: (val) => setState(() {
+                              age = int.tryParse(val) ?? 0;
+                            }),
+                            validator: (val) {
+                              final parsedAge = int.tryParse(val ?? '');
+                              if (parsedAge == null || parsedAge <= 0) {
+                                return "Enter a valid age";
+                              }
+                              return null;
+                            },
+                            decoration: InputDecoration(
+                              hintText: "Age",
+                              prefixIcon: const Icon(Icons.cake_outlined),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(
+                                  30,
+                                ), // very round = fun
+                                borderSide: BorderSide(
+                                  color: Colors.purple,
+                                  width: .3,
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(height: 20),
+
                           ElevatedButton(
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
@@ -96,6 +126,7 @@ class _RegisterState extends State<Register> {
                                     .registerWithEmailAndPassword(
                                       email,
                                       password,
+                                      age,
                                     );
                                 if (result == null) {
                                   setState(() {

@@ -46,6 +46,7 @@ class DatabaseService {
   Future<void> createUser({
     required String name,
     required String email,
+    required int age,
     String role = 'caregiver',
   }) async {
     final now = DateTime.now().millisecondsSinceEpoch;
@@ -55,6 +56,7 @@ class DatabaseService {
       'name': name,
       'email': email,
       'role': role,
+      'age': age,
       'linkedDeviceIds': [], // 🔥 now a list
       'createdAt': now,
     });
@@ -213,23 +215,24 @@ class DatabaseService {
   /// Check if device sensors have been initialized with data
   Future<bool> hasDeviceSensorData(String deviceId) async {
     try {
-      // Check if at least one sensor has history data
-      for (int i = 1; i <= 6; i++) {
-        final snap = await _sensorHistory(deviceId, i).limitToFirst(1).get();
-        if (snap.exists) return true;
-      }
-      return false;
+      // Check if the flat history has any entries
+      final snap = await _sensorsHistory(deviceId).limitToFirst(1).get();
+      return snap.exists;
     } catch (e) {
       return false;
     }
   }
+
   Stream<DatabaseEvent> sensorStream(String deviceId, int sensorNum) {
     if (sensorNum < 1 || sensorNum > 6) {
       throw Exception('Sensor number must be between 1 and 6');
     }
-    return _sensorLatest(deviceId, sensorNum)
-        .onValue
-        .asBroadcastStream();
+    return _sensorLatest(deviceId, sensorNum).onValue.asBroadcastStream();
+  }
+
+  /// Stream for flat sensor data (all sensors in one object)
+  Stream<DatabaseEvent> sensorFlatStream(String deviceId) {
+    return _sensorsLatest(deviceId).onValue.asBroadcastStream();
   }
 
   /// Get latest reading for a specific sensor
@@ -241,6 +244,13 @@ class DatabaseService {
       throw Exception('Sensor number must be between 1 and 6');
     }
     final snap = await _sensorLatest(deviceId, sensorNum).get();
+    if (!snap.exists) return null;
+    return Map<String, dynamic>.from(snap.value as Map);
+  }
+
+  /// Get latest flat sensor data (all sensors in one object)
+  Future<Map<String, dynamic>?> getSensorLatestFlat(String deviceId) async {
+    final snap = await _sensorsLatest(deviceId).get();
     if (!snap.exists) return null;
     return Map<String, dynamic>.from(snap.value as Map);
   }
@@ -269,8 +279,58 @@ class DatabaseService {
     return list.sublist(list.length - limit);
   }
 
-  /// Add a new sensor reading to history
+  /// Get flat sensor history (all sensors data over time)
+  Future<List<Map<String, dynamic>>> getSensorHistoryFlat(
+    String deviceId, {
+    int limit = 100,
+  }) async {
+    final snap = await _sensorsHistory(deviceId).get();
+
+    if (!snap.exists) return [];
+
+    final raw = Map<String, dynamic>.from(snap.value as Map);
+    final list = raw.values
+        .map((e) => Map<String, dynamic>.from(e as Map))
+        .toList();
+    list.sort(
+      (a, b) => (a['timestamp'] as int).compareTo(b['timestamp'] as int),
+    );
+    if (list.length <= limit) return list;
+    return list.sublist(list.length - limit);
+  }
+
+  /// Add a new sensor reading to history (writes flat structure to device level)
+  /// Reads current latest, archives it to history, then writes new data
   Future<void> addSensorReading(
+    String deviceId,
+    Map<String, dynamic> sensorData,
+  ) async {
+    final timestamp = DateTime.now().millisecondsSinceEpoch;
+    final dataWithTimestamp = {...sensorData, 'timestamp': timestamp};
+
+    try {
+      // Step 1: Read current latest (if it exists)
+      final currentLatest = await _sensorsLatest(deviceId).get();
+
+      // Step 2: If current latest exists, archive it to history
+      if (currentLatest.exists) {
+        final currentData = Map<String, dynamic>.from(
+          currentLatest.value as Map,
+        );
+        await _sensorsHistory(deviceId).push().set(currentData);
+      }
+
+      // Step 3: Write new sensor data to latest (flat structure)
+      await _sensorsLatest(deviceId).set(dataWithTimestamp);
+    } catch (e) {
+      throw Exception('Failed to add sensor reading: $e');
+    }
+  }
+
+  /// [DEPRECATED] Old per-sensor method - do NOT use
+  /// This method incorrectly writes to individual sensor_N paths
+  @Deprecated('Use addSensorReading(deviceId, fullSensorData) instead')
+  Future<void> addSensorReadingPerSensor(
     String deviceId,
     int sensorNum,
     Map<String, dynamic> data,
@@ -285,29 +345,42 @@ class DatabaseService {
     await _sensorLatest(deviceId, sensorNum).set(dataWithTimestamp);
 
     // Add to history
-    await _sensorHistory(deviceId, sensorNum)
-        .push()
-        .set(dataWithTimestamp);
+    await _sensorHistory(deviceId, sensorNum).push().set(dataWithTimestamp);
   }
 
-  /// Initialize 6 sensors for a new device
+  /// Initialize sensors for a new device with flat structure
   Future<void> initializeDeviceSensors(String deviceId) async {
     final timestamp = DateTime.now().millisecondsSinceEpoch;
+
+    // Initialize with all sensor fields in a flat structure
     final initData = {
-      'value': 0,
-      'unit': 'unknown',
+      'accelerometerX': 0.0,
+      'accelerometerY': 0.0,
+      'accelerometerZ': 9.81,
+      'batteryLevel': 100,
+      'gyroscopeX': 0.0,
+      'gyroscopeY': 0.0,
+      'gyroscopeZ': 0.0,
+      'isCharging': false,
+      'motionDetected': false,
+      'signalStrength': -50,
       'status': 'offline',
       'timestamp': timestamp,
     };
 
-    for (int i = 1; i <= 6; i++) {
-      await _sensorLatest(deviceId, i).set(initData);
-    }
+    // Write to flat latest path
+    await _sensorsLatest(deviceId).set(initData);
+    // Also initialize history as empty (or with one initial entry)
+    // Optionally, you could add an initial entry:
+    // await _sensorsHistory(deviceId).push().set(initData);
   }
 
-  /// Get all 6 sensors latest data as a map
+  /// [DEPRECATED] Get all 6 sensors latest data as a map
+  /// Use getSensorLatestFlat(deviceId) instead for the unified flat structure
+  @Deprecated('Use getSensorLatestFlat(deviceId) instead')
   Future<Map<int, Map<String, dynamic>>> getAllSensorsLatest(
-      String deviceId) async {
+    String deviceId,
+  ) async {
     final result = <int, Map<String, dynamic>>{};
     for (int i = 1; i <= 6; i++) {
       final snap = await _sensorLatest(deviceId, i).get();
@@ -326,7 +399,8 @@ class DatabaseService {
   /// Get historical data for all sensors combined (legacy)
   /// Use getSensorHistory() for individual sensor history
   @Deprecated(
-      'Use getSensorHistory(deviceId, sensorNum) for individual sensors')
+    'Use getSensorHistory(deviceId, sensorNum) for individual sensors',
+  )
   Future<List<Map<String, dynamic>>> getSensorsHistory(
     String deviceId, {
     int limit = 20,

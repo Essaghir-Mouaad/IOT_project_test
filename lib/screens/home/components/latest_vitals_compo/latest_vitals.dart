@@ -5,7 +5,7 @@ class LatestVitals extends StatelessWidget {
   final double heart;
   final double temperature;
   final double spo2;
-  final double airQuality; // Placeholder for air quality index
+  final double airQuality;
 
   const LatestVitals({
     super.key,
@@ -17,45 +17,59 @@ class LatestVitals extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.all(10),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Text("Latest Vitals"),
-          Column(
-            // crossAxisAlignment: CrossAxisAlignment.stretch,
-            // mainAxisAlignment: MainAxisAlignment.start
+          // Text(
+          //   'Latest Vitals',
+          //   style: Theme.of(context).textTheme.titleMedium?.copyWith(
+          //     fontWeight: FontWeight.w600,
+          //     letterSpacing: -0.3,
+          //   ),
+          // ),
+          // const SizedBox(height: 10),
+          Row(
             children: [
-              VitalsContainer(
-                info: heart,
-                unit: 'bpm',
-                icon: Icons.favorite,
-                label: "Heart Rate",
-                color: Colors.red,
+              Expanded(
+                child: VitalsContainer(
+                  info: heart,
+                  icon: Icons.favorite_rounded,
+                  unit: 'bpm',
+                  color: const Color.fromARGB(255, 209, 16, 16),
+                ),
               ),
-              const SizedBox(height: 2),
-              VitalsContainer(
-                info: temperature,
-                unit: '°C',
-                icon: Icons.thermostat,
-                label: "Temperature",
-                color: Colors.blue,
+              const SizedBox(width: 5),
+              Expanded(
+                child: VitalsContainer(
+                  info: temperature,
+                  icon: Icons.thermostat_rounded,
+                  unit: '°C',
+                  color: const Color.fromARGB(255, 230, 119, 15),
+                ),
               ),
-              const SizedBox(height: 2),
-              VitalsContainer(
-                info: spo2,
-                unit: '%',
-                icon: Icons.brightness_5,
-                label: "SpO2",
-                color: Colors.green,
+            ],
+          ),
+          const SizedBox(height: 5),
+          Row(
+            children: [
+              Expanded(
+                child: VitalsContainer(
+                  info: spo2,
+                  icon: Icons.water_drop_rounded,
+                  unit: '%',
+                  color: const Color.fromARGB(255, 0, 111, 255),
+                ),
               ),
-              const SizedBox(height: 2),
-              VitalsContainer(
-                info: airQuality,
-                unit: 'AQI',
-                icon: Icons.air,
-                label: "Air Quality",
-                color: Colors.orange,
+              const SizedBox(width: 5),
+              Expanded(
+                child: VitalsContainer(
+                  info: airQuality,
+                  icon: Icons.air_rounded,
+                  unit: 'AQI',
+                  color: const Color.fromARGB(255, 6, 196, 94),
+                ),
               ),
             ],
           ),

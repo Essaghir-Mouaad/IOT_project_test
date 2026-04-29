@@ -86,7 +86,7 @@ class SensorUsageExamples {
       'label': 'Temperature Sensor',
     };
     
-    await _db.addSensorReading(deviceId, 1, sensorData);
+    await _db.addSensorReading(deviceId, sensorData);
     print('Saved reading for sensor 1');
   }
 

@@ -44,12 +44,18 @@ class _DeviceDashboardState extends State<DeviceDashboard>
           controller: _tabController,
           tabs: const [
             Tab(
-              // text: "Latest Vit",
-              icon: Icon(Icons.graphic_eq_outlined, size: 25),
+              child: Text(
+                "Latest Vit",
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              ),
             ),
             Tab(
-              // text: "History",
-              icon: Icon(Icons.history_outlined, size: 25, color: Colors.green),
+              child: Text(
+                "History",
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              ),
+
+              // icon: Icon(Icons.history_outlined, size: 25, color: Colors.green),
             ),
           ],
         ),

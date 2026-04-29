@@ -2,7 +2,7 @@ import 'package:brew_crew/shared/status_items.dart';
 import 'package:flutter/material.dart';
 
 class AnalyseVitals extends StatelessWidget {
-  final String overallStatus; // 'normal', 'warning', 'emergency'
+  final String overallStatus;
   final String heartStatus;
   final String temperatureStatus;
   final String spo2Status;
@@ -20,11 +20,11 @@ class AnalyseVitals extends StatelessWidget {
   Color _getStatusColor(String status) {
     switch (status) {
       case 'normal':
-        return Colors.green;
+        return const Color(0xFF3DBF7A);
       case 'warning':
-        return Colors.amber;
+        return const Color(0xFFF5963D);
       case 'emergency':
-        return Colors.red;
+        return const Color(0xFFE05252);
       default:
         return Colors.grey;
     }
@@ -33,13 +33,13 @@ class AnalyseVitals extends StatelessWidget {
   IconData _getStatusIcon(String status) {
     switch (status) {
       case 'normal':
-        return Icons.check_circle;
+        return Icons.check_circle_rounded;
       case 'warning':
-        return Icons.warning_amber;
+        return Icons.warning_amber_rounded;
       case 'emergency':
-        return Icons.error;
+        return Icons.error_rounded;
       default:
-        return Icons.help_outline;
+        return Icons.help_outline_rounded;
     }
   }
 
@@ -50,58 +50,66 @@ class AnalyseVitals extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(6),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: .2),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: overallColor.withValues(alpha: .2),
+          width: 1.2,
+        ),
       ),
+      clipBehavior: Clip.antiAlias,
       child: Column(
         children: [
-          // ── Header with Overall Status ──────────────────
+          // ── Header ──────────────────────────────────────
           Container(
-            padding: const EdgeInsets.all(14),
+            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
             decoration: BoxDecoration(
-              color: overallColor.withValues(alpha: 0.09),
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(6),
-                topRight: Radius.circular(6),
-              ),
+              color: overallColor.withValues(alpha: .07),
               border: Border(
                 bottom: BorderSide(
-                  color: overallColor.withValues(alpha: 0.5),
-                  width: 2,
+                  color: overallColor.withValues(alpha: .2),
+                  width: 1.5,
                 ),
               ),
             ),
             child: Row(
               children: [
-                Icon(
-                  _getStatusIcon(overallStatus),
-                  color: overallColor,
-                  size: 30,
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: overallColor.withValues(alpha: .15),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: Icon(
+                    _getStatusIcon(overallStatus),
+                    color: overallColor,
+                    size: 24,
+                  ),
                 ),
-                const SizedBox(width: 10),
+                const SizedBox(width: 14),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       'Overall Health Status',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onSurface.withValues(alpha: .9),
                         fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        color: Colors.grey[800],
+                        fontSize: 20,
+                        letterSpacing: 0.6,
                       ),
                     ),
+                    const SizedBox(height: 2),
                     Text(
-                      overallStatus.toUpperCase(),
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      overallStatus[0].toUpperCase() +
+                          overallStatus.substring(1),
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
                         color: overallColor,
-                        fontWeight: FontWeight.w600,
+                        letterSpacing: -0.3,
                       ),
                     ),
                   ],
@@ -110,36 +118,36 @@ class AnalyseVitals extends StatelessWidget {
             ),
           ),
 
-          // ── Status Items ────────────────────────────────
+          // ── Status Items ─────────────────────────────────
           Padding(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(14),
             child: Column(
               children: [
                 StatusItem(
                   title: 'Heart Rate',
                   status: heartStatus,
-                  icon: Icons.favorite,
+                  icon: Icons.favorite_rounded,
                   statusColor: _getStatusColor(heartStatus),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 10),
                 StatusItem(
                   title: 'Temperature',
                   status: temperatureStatus,
-                  icon: Icons.thermostat,
+                  icon: Icons.thermostat_rounded,
                   statusColor: _getStatusColor(temperatureStatus),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 10),
                 StatusItem(
                   title: 'SpO2 Level',
                   status: spo2Status,
-                  icon: Icons.brightness_5,
+                  icon: Icons.water_drop_rounded,
                   statusColor: _getStatusColor(spo2Status),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 10),
                 StatusItem(
                   title: 'Respiratory Rate',
                   status: airQualityStatus,
-                  icon: Icons.air,
+                  icon: Icons.air_rounded,
                   statusColor: _getStatusColor(airQualityStatus),
                 ),
               ],

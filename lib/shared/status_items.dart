@@ -17,40 +17,40 @@ class StatusItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
       decoration: BoxDecoration(
-        color: statusColor.withValues(alpha: 0.08),
+        color: statusColor.withValues(alpha: .06),
         border: Border.all(
-          color: statusColor.withValues(alpha: 0.2),
-          width: 1.5,
+          color: statusColor.withValues(alpha: .16),
+          width: 1.2,
         ),
-        borderRadius: BorderRadius.circular(6),
+        borderRadius: BorderRadius.circular(14),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Expanded(
-            child: Row(
-              children: [
-                Icon(icon, color: statusColor, size: 25),
-                const SizedBox(width: 12),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.grey[600],
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
+          Row(
+            children: [
+              Container(
+                width: 38,
+                height: 38,
+                decoration: BoxDecoration(
+                  color: statusColor.withValues(alpha: .14),
+                  borderRadius: BorderRadius.circular(10),
                 ),
-              ],
-            ),
+                child: Icon(icon, color: statusColor, size: 18),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                title,
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+              ),
+            ],
           ),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
             decoration: BoxDecoration(
               color: statusColor,
               borderRadius: BorderRadius.circular(20),
@@ -59,7 +59,8 @@ class StatusItem extends StatelessWidget {
               status.toUpperCase(),
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
                 color: Colors.white,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 0.5,
               ),
             ),
           ),

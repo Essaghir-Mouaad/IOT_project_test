@@ -20,6 +20,7 @@ class LatestVitalsAnalysis extends StatelessWidget {
             spo2: vital.spO2,
             airQuality: vital.respiratoryRate,
           ),
+          
           AnalyseVitals(
             heartStatus: vital.heartRateStatus,
             temperatureStatus: vital.bodyTempStatus,

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 class VitalsContainer extends StatelessWidget {
   final double info;
   final IconData icon;
-  final String label;
   final Color color;
   final String unit;
 
@@ -12,7 +11,6 @@ class VitalsContainer extends StatelessWidget {
     super.key,
     required this.info,
     required this.icon,
-    required this.label,
     required this.unit,
     required this.color,
   });
@@ -23,7 +21,6 @@ class VitalsContainer extends StatelessWidget {
       icon: icon,
       unit: unit,
       color: color,
-      label: label,
       value: info.toStringAsFixed(1),
     );
   }

@@ -7,6 +7,7 @@ class VitalDataModel {
   final double respiratoryRate; // Placeholder for air quality index (AQI)
   final double systolicBP;
   final double diastolicBP;
+  final String activity;
 
   VitalDataModel({
     required this.id,
@@ -16,6 +17,7 @@ class VitalDataModel {
     required this.bodyTemp,
     required this.respiratoryRate,
     required this.systolicBP,
+    required this.activity,
     required this.diastolicBP,
   });
 
@@ -29,6 +31,7 @@ class VitalDataModel {
       respiratoryRate: (map['respiratoryRate'] ?? 0).toDouble(),
       systolicBP: (map['systolicBP'] ?? 0).toDouble(),
       diastolicBP: (map['diastolicBP'] ?? 0).toDouble(),
+      activity: (map['activity'] ?? 'unknown'),
     );
   }
 

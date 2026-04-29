@@ -8,7 +8,7 @@ class AuthService {
   // create a user obj based on firebase obj
   app_user.User? _userFromFirebaseUser(User? user) {
     return user != null
-        ? app_user.User(uid: user.uid, name: "", email: "", role: "")
+        ? app_user.User(uid: user.uid, name: "", email: "", role: "", age: 0)
         : null;
   }
 
@@ -53,6 +53,7 @@ class AuthService {
   Future<app_user.User?> registerWithEmailAndPassword(
     String email,
     String password,
+    int age,
   ) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
@@ -63,9 +64,12 @@ class AuthService {
       if (user != null) {
         // Extract name from email (before @)
         final nameFromEmail = email.split('@')[0];
-        await DatabaseService(
-          uid: user.uid,
-        ).createUser(name: nameFromEmail, email: email, role: 'caregiver');
+        await DatabaseService(uid: user.uid).createUser(
+          name: nameFromEmail,
+          email: email,
+          role: 'caregiver',
+          age: age,
+        );
       }
       return _userFromFirebaseUser(user);
     } catch (e) {
