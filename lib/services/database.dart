@@ -58,6 +58,21 @@ class DatabaseService {
     return Map<String, dynamic>.from(snap.value as Map);
   }
 
+  Future<void> updateUserProfile({
+    required String name,
+    required String email,
+    required String role,
+    required int age,
+  }) async {
+    await _userRef().update({
+      'name': name,
+      'email': email,
+      'role': role,
+      'age': age,
+      'updatedAt': DateTime.now().millisecondsSinceEpoch,
+    });
+  }
+
   Future<List<String>> getLinkedDeviceIds() async {
     final profile = await getUserProfile();
     if (profile == null) return [];

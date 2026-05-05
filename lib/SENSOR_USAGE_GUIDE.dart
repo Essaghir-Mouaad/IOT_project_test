@@ -15,117 +15,76 @@
 // ════════════════════════════════════════════════════════════════════════════
 
 import 'package:brew_crew/services/database.dart';
-import 'package:brew_crew/models/sensor_model.dart';
 
 class SensorUsageExamples {
   final String userId = 'user123';
   final String deviceId = 'device456';
 
   late final DatabaseService _db = DatabaseService(uid: userId);
+  // ─────────────────────────────────────────────────────────────────────────
+  // 1. LISTEN TO REAL-TIME SENSOR LATEST (FLAT STRUCTURE)
+  // ─────────────────────────────────────────────────────────────────────────
+  void listenToSensorsRealTime() {
+    final stream = _db.latestSensorsStream(deviceId);
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // 1. LISTEN TO REAL-TIME DATA FOR A SPECIFIC SENSOR
-  // ─────────────────────────────────────────────────────────────────────────
-  void listenToSensorRealTime() {
-    // Listen to sensor 1 real-time updates
-    final stream = _db.sensorStream(deviceId, 1);
-    
     stream.listen((event) {
       if (event.snapshot.exists) {
-        final data = Map<String, dynamic>.from(
-            event.snapshot.value as Map);
-        final sensor = SensorModel.fromMap(1, data);
-        print('Sensor 1 latest: $sensor');
-        // Update UI here
+        final data = Map<String, dynamic>.from(event.snapshot.value as Map);
+        // `data` contains flat sensor fields (accelerometerX, batteryLevel, ...)
+        print('Sensors latest (flat): $data');
+        // Update UI here using `data` or map into your models
       }
     });
   }
 
   // ─────────────────────────────────────────────────────────────────────────
-  // 2. GET LATEST READING FOR A SENSOR
+  // 2. GET LATEST FLAT READING FOR A DEVICE
   // ─────────────────────────────────────────────────────────────────────────
-  Future<void> getLatestSensorReading() async {
-    final data = await _db.getSensorLatest(deviceId, 1);
+  Future<void> getLatestSensorsReading() async {
+    final data = await _db.getSensorLatestFlat(deviceId);
     if (data != null) {
-      final sensor = SensorModel.fromMap(1, data);
-      print('Sensor 1: $sensor');
+      print('Latest flat sensors: $data');
+      // Convert to your UI model if needed
     }
   }
 
   // ─────────────────────────────────────────────────────────────────────────
-  // 3. GET HISTORICAL DATA FOR CHARTS (Most Important!)
+  // 3. GET HISTORICAL FLAT SENSOR DATA FOR CHARTS
   // ─────────────────────────────────────────────────────────────────────────
-  Future<void> getHistoricalDataForChart() async {
-    // Get last 100 readings for sensor 1
-    final history = await _db.getSensorHistory(deviceId, 1, limit: 100);
-    
+  Future<void> getHistoricalFlatDataForChart() async {
+    final history = await _db.getSensorHistoryFlat(deviceId, limit: 100);
+
     if (history.isNotEmpty) {
-      // Convert to SensorModel list for easier use
-      final sensors = history
-          .map((data) => SensorModel.fromMap(1, data))
+      // `history` is a List<Map<String, dynamic>> of previous flat snapshots
+      print('Got ${history.length} historical flat readings');
+      // Example: extract a time series for `batteryLevel`
+      final batterySeries = history
+          .map((m) => (m['batteryLevel'] as num).toDouble())
           .toList();
-      
-      // Now you can use this for charting:
-      // - Extract values: sensors.map((s) => s.value).toList()
-      // - Extract timestamps: sensors.map((s) => s.timestamp).toList()
-      // - Pass to your chart library (fl_chart, syncfusion, etc.)
-      
-      print('Got ${sensors.length} historical readings');
-      sensors.forEach((s) => print('  ${s.timestamp}: ${s.value} ${s.unit}'));
+      print('Battery series length: ${batterySeries.length}');
     }
   }
 
   // ─────────────────────────────────────────────────────────────────────────
-  // 4. ADD A NEW SENSOR READING (called by IoT device/backend)
+  // 4. ADD A NEW SENSOR READING (archives previous latest -> history)
   // ─────────────────────────────────────────────────────────────────────────
   Future<void> recordNewSensorReading() async {
     final sensorData = {
-      'value': 23.5,
-      'unit': '°C',
-      'status': 'online',
-      'label': 'Temperature Sensor',
+      'batteryLevel': 98,
+      'isCharging': false,
+      'motionDetected': false,
     };
-    
+
     await _db.addSensorReading(deviceId, sensorData);
-    print('Saved reading for sensor 1');
+    print('Saved flat sensor reading');
   }
 
   // ─────────────────────────────────────────────────────────────────────────
-  // 5. INITIALIZE ALL 6 SENSORS FOR A NEW DEVICE
+  // 5. INITIALIZE SENSORS FOR A NEW DEVICE
   // ─────────────────────────────────────────────────────────────────────────
   Future<void> setupNewDevice() async {
     await _db.initializeDeviceSensors(deviceId);
-    print('Initialized 6 sensors for device');
-  }
-
-  // ─────────────────────────────────────────────────────────────────────────
-  // 6. GET ALL 6 SENSORS' LATEST DATA AT ONCE
-  // ─────────────────────────────────────────────────────────────────────────
-  Future<void> getAllSensorsLatestData() async {
-    final allSensors = await _db.getAllSensorsLatest(deviceId);
-    
-    allSensors.forEach((sensorNum, data) {
-      final sensor = SensorModel.fromMap(sensorNum, data);
-      print('Sensor $sensorNum: ${sensor.value} ${sensor.unit}');
-    });
-  }
-
-  // ─────────────────────────────────────────────────────────────────────────
-  // 7. EXAMPLE: MULTI-SENSOR CHART IN HISTORY TAB
-  // ─────────────────────────────────────────────────────────────────────────
-  Future<Map<int, List<SensorModel>>> getHistoryForAllSensors() async {
-    final result = <int, List<SensorModel>>{};
-    
-    // Get history for all 6 sensors
-    for (int i = 1; i <= 6; i++) {
-      final history = await _db.getSensorHistory(deviceId, i, limit: 100);
-      result[i] = history
-          .map((data) => SensorModel.fromMap(i, data))
-          .toList();
-    }
-    
-    return result;
-    // Usage: Display tabs/cards with charts for each sensor
+    print('Initialized sensors (flat) for device');
   }
 }
 

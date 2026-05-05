@@ -65,6 +65,11 @@ class _HomeState extends State<Home> {
     }
 
     // ── Device dashboard ─────────────────────────────────────
-    return HomeWrapper(deviceId: _connectedDeviceId!, db: _db, onDisconnect: _onDisconnect, onLogout: () async => await _auth.signOut());
+    return HomeWrapper(
+      deviceId: _connectedDeviceId!,
+      db: _db,
+      onDisconnect: _onDisconnect,
+      onLogout: () async => await _auth.signOut(),
+    );
   }
 }

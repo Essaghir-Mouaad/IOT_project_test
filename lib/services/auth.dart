@@ -78,6 +78,38 @@ class AuthService {
     }
   }
 
+  // update user data
+  Future<bool> updateUserData({
+    required String name,
+    required String email,
+    required String role,
+    required int age,
+  }) async {
+    try {
+      User? user = _auth.currentUser;
+      if (user != null) {
+        // Update Firebase profile (name only)
+        await user.updateProfile(displayName: name);
+
+        // Update email if it's different from current
+        if (user.email != email) {
+          await user.verifyBeforeUpdateEmail(email);
+        }
+
+        // Update user data in Firestore database
+        await DatabaseService(
+          uid: user.uid,
+        ).updateUserProfile(name: name, email: email, role: role, age: age);
+
+        return true;
+      }
+      return false;
+    } catch (e) {
+      print('Error updating user data: ${e.toString()}');
+      return false;
+    }
+  }
+
   // sign out
   Future signOut() async {
     try {
