@@ -38,7 +38,7 @@ class _NormalCardState extends State<NormalCard>
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: _bob,
-      builder: (_, __) => StatusCard(
+      builder: (_, _) => StatusCard(
         color: StatusColors.normalPrimary,
         bgColor: StatusColors.normalBg,
         darkColor: StatusColors.normalDark,

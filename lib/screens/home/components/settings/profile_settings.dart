@@ -42,7 +42,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
     }
 
     try {
-      final profile = await _dbService!.getUserProfile();
+      final profile = await _dbService.getUserProfile();
       if (profile != null && mounted) {
         setState(() {
           _nameController.text = profile['name'] ?? '';

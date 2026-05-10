@@ -38,7 +38,7 @@ class _CriticalCardState extends State<CriticalCard>
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: _pulse,
-      builder: (_, __) => StatusCard(
+      builder: (_, _) => StatusCard(
         color: StatusColors.criticalPrimary,
         bgColor: StatusColors.criticalBg,
         darkColor: StatusColors.criticalDark,

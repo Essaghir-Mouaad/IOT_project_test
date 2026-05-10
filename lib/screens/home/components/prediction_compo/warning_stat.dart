@@ -38,7 +38,7 @@ class _WarningCardState extends State<WarningCard>
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: _swing,
-      builder: (_, __) => StatusCard(
+      builder: (_, _) => StatusCard(
         color: StatusColors.warningPrimary,
         bgColor: StatusColors.warningBg,
         darkColor: StatusColors.warningDark,
